@@ -3,6 +3,7 @@
 namespace Laravel\Backup;
 
 use Illuminate\Console\Command;
+use Illuminate\Console\Scheduling\Schedule;
 
 class Backup extends Command
 {
