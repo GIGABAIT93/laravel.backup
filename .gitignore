@@ -3,6 +3,7 @@ prepare.sh
 .gitattributes
 .github
 .styleci.yml
+.gitignore
 CHANGELOG.md7
 CONTRIBUTING.md
 LICENSE.md
