@@ -8,7 +8,7 @@ class Backup extends Command
 {
 
   protected $signature = 'p:backup';
-  protected $description = 'Bacup for Pterodactyl';
+  protected $description = 'Backup for Pterodactyl';
 
   public function handle()
   {
