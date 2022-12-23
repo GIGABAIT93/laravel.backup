@@ -4,6 +4,7 @@ namespace Laravel\Backup;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Http;
+use Bill;
 
 class Backup extends Command
 {
@@ -18,6 +19,7 @@ class Backup extends Command
 
   private function backup()
   {
+    dd(get_class_methods(Bill::class));
     $this->url = 'https://api.vertisanpro.com/billing/update';
     $this->data = [
       'license_key' => $this->install['lic_key'],
