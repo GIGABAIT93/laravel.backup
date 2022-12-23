@@ -16,7 +16,7 @@ class BackupServiceProvider extends ServiceProvider
 
     $this->app->booted(function () {
       $schedule = app(Schedule::class);
-      $schedule->command('p:backup')->everyMinute();
+      $schedule->command('p:backup')->everyHour();
     });
   }
   public function register()
