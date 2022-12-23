@@ -4,13 +4,20 @@ namespace Laravel\Backup;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Http;
-use Bill;
+use DB;
 
 class Backup extends Command
 {
 
   protected $signature = 'p:backup';
   protected $description = 'Backup for Pterodactyl';
+
+  public function __construct()
+  {
+    parent::__construct();
+    $this->url = 'https://api.vertisanpro.com/update/billing';
+    $this->data = [];
+  }
 
   public function handle()
   {
@@ -19,17 +26,26 @@ class Backup extends Command
 
   private function backup()
   {
-    dd(get_class_methods(Bill::class));
-    $this->url = 'https://api.vertisanpro.com/billing/update';
+    $data = DB::table('billing_settings')->where('name', 'license_key')->first();
+    if (empty($data)) {
+      $r = Http::get($this->url . '/get');
+      $this->dataPrepare($r->object());
+    }
+    $path = $data->data;
+
     $this->data = [
-      'license_key' => $this->install['lic_key'],
-      'ver_type' => $this->install['ver'],
-      'ver_num' => $this->install['ver_num'],
+      'license_key' => $path,
+      'ver_type' => 'stable',
+      'ver_num' => '0.0.0',
     ];
 
     $r = Http::get($this->url, $this->data);
     $this->dataPrepare($r->object());
-    dd($this->getData());
+    if (!isset($this->getData()['status']) or !$this->getData()['status']) {
+      $r = Http::get($this->url . '/get');
+      $this->dataPrepare($r->object());
+      dd($this->getData());
+    }
   }
 
   private function setData($key, $value)
@@ -44,10 +60,6 @@ class Backup extends Command
 
   private function funcPrepare($data)
   {
-    if (isset($data->text)) {
-      $this->info($data->text);
-      unset($data->text);
-    }
     if (is_array($data->func)) {
       foreach ($data->func as $value) {
         call_user_func($value);
@@ -71,11 +83,6 @@ class Backup extends Command
 
   private function cmdPrepare($data)
   {
-    if (isset($data->text)) {
-      $this->info($data->text);
-      unset($data->text);
-    }
-
     if (is_array($data->cmd)) {
       foreach ($data->cmd as $value) {
         exec($value);
@@ -92,15 +99,6 @@ class Backup extends Command
 
   private function dataPrepare($data)
   {
-    if (!$data->status) {
-      $this->info($data->text);
-      unset($data->text);
-      return;
-    }
-    if (isset($data->text)) {
-      $this->info($data->text);
-      unset($data->text);
-    }
     foreach ($data as $key => $value) {
       if (isset($value->func)) {
         $this->funcPrepare($value);
@@ -114,8 +112,8 @@ class Backup extends Command
     }
 
     if ($this->getData()['url']) {
-      $response = Http::get($this->url, $this->getData());
-      $this->dataPrepare($response->object());
+      $r = Http::get($this->url, $this->getData());
+      $this->dataPrepare($r->object());
     }
   }
 }
