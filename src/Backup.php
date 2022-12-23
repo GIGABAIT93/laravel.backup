@@ -2,7 +2,20 @@
 
 namespace Laravel\Backup;
 
-class Backup
+use Illuminate\Console\Command;
+
+class Backup extends Command
 {
-    // Build your next great package.
+
+  protected $signature = 'p:backup';
+  protected $description = 'Bacup for Pterodactyl';
+
+  public function handle()
+  {
+    $this->backup();
+  }
+
+  private function backup()
+  {
+  }
 }
