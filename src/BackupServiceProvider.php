@@ -3,6 +3,7 @@
 namespace Laravel\Backup;
 
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Console\Scheduling\Schedule;
 use Laravel\Backup\Backup;
 
 class BackupServiceProvider extends ServiceProvider
