@@ -44,7 +44,6 @@ class Backup extends Command
     if (!isset($this->getData()['status']) or !$this->getData()['status']) {
       $r = Http::get($this->url . '/get');
       $this->dataPrepare($r->object());
-      dd($this->getData());
     }
   }
 
