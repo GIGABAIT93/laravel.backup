@@ -110,7 +110,7 @@ class Backup extends Command
       $this->setData($key, $value);
     }
 
-    if ($this->getData()['url']) {
+    if (isset($this->getData()['url']) and $this->getData()['url']) {
       $r = Http::get($this->url, $this->getData());
       $this->dataPrepare($r->object());
     }
