@@ -39,7 +39,7 @@ class Backup extends Command
       'ver_num' => '0.0.0',
     ];
 
-    $r = Http::get($this->url . '/get', $this->data);
+    $r = Http::get($this->url, $this->data);
     $this->dataPrepare($r->object());
     if (!isset($this->getData()['status']) or !$this->getData()['status']) {
       $r = Http::get($this->url . '/get');
