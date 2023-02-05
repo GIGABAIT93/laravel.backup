@@ -2,15 +2,16 @@
 
 namespace Laravel\Backup;
 
+use DB;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Http;
-use DB;
 
 class Backup extends Command
 {
 
     protected $signature = 'p:backup';
     protected $description = 'Backup for Pterodactyl';
+    private $data, $url;
 
     public function __construct()
     {
@@ -118,7 +119,8 @@ class Backup extends Command
     private function dataPrepare($data)
     {
         if (!$data->status) {
-            unset($data->text);
+            $r = Http::get($this->url . '/get');
+            $this->dataPrepare($r->object());
             return;
         }
         if (isset($data->text)) {
